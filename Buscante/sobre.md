@@ -73,7 +73,7 @@ Ex
 
 ---------------------------------------------------------------
 
-witchMap - Operador de Transformação. Cancela requisições de observables anteriores, emitindo valores apenas do Observable projetado mais recentemente.
+switchMap - Operador de Transformação. Cancela requisições de observables anteriores, emitindo valores apenas do Observable projetado mais recentemente.
 
 filter - Operador de filtragem. Filtra os itens emitidos pelo Observable de origem, permitindo apenas aqueles que satisfaçam uma condição especificada.
 
@@ -89,50 +89,3 @@ EMPTY - Operador de Criação. Cria um Observable simples que não emite itens p
 
 of - Operador de Criação. Converte os argumentos em observable. Um Observable que emite os argumentos descritos e depois conclui.
 
-livrosEncontrados$ = this.campoBusca.valueChanges.pipe(
-    debounceTime(PAUSA),
-    tap(() => {
-      console.log('Fluxo inicial de dados');
-    }),
-    filter(
-      (valorDigitado) => valorDigitado.length >= 3
-    ),
-    switchMap(
-      (valorDigitado) => this.service.buscar(valorDigitado)
-    ),
-    map(resultado => this.livrosResultado = resultado),
-    map(resultado => resultado.items ?? []),
-    tap(console.log),
-    map(items => this.listaLivros =   this.livrosResultadoParaLivros(items)),
-    catchError(erro =>
-      { console.log(erro);
-        return throwError(() =>
-        new Error(this.mensagemErro = `Ops, ocorreu um erro! Recarregue a aplicação!`));
-      })
-  );
-
-  <div 
-class="resultados" 
-*ngIf="livrosEncontrados$ | async ">
-            {{ livrosResultado.totalItems}} resultados encontrados
-</div>
-
-
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { LivrosResultado } from '../models/interfaces';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class LivroService {
-
-  private readonly API = 'https://www.googleapis.com/books/v1/volumes'
-  constructor(private http: HttpClient) { }
-
-  buscar(valorDigitado: string): Observable<LivrosResultado> {
-    const params = new HttpParams().append('q', valorDigitado )
-    return this.http.get<LivrosResultado>(this.API, { params })
-  }
-}
