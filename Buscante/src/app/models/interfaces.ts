@@ -13,7 +13,8 @@ export interface VolumeInfo {
   authors?: string[];
   publisher?: string;
   publishedDate?: string;
-  description?: string;
+  description?: string
+  previewLink?: string;
   pageCount:           number;
   printType:           string;
   mainCategory:        string;
@@ -36,11 +37,11 @@ export interface ImageLinks {
   extraLarge:     string;
 }
 
-export interface item{
-  VolumeInfo: VolumeInfo
+export interface Item{
+  volumeInfo: VolumeInfo
 }
 
 export interface livrosResultado{
-  itens: item[]
-  totalDeItens: number
+  items: Item[]
+  totalItems: number
 }
